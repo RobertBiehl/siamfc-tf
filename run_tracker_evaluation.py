@@ -1,4 +1,4 @@
-from __future__ import division
+
 import sys
 import os
 import numpy as np
@@ -48,24 +48,24 @@ def main():
                                                                      target_w, target_h, final_score_sz, filename,
                                                                      image, templates_z, scores, start_frame)
                 lengths[idx], precisions[idx], precisions_auc[idx], ious[idx] = _compile_results(gt_, bboxes, evaluation.dist_threshold)
-                print str(i) + ' -- ' + videos_list[i] + \
+                print(str(i) + ' -- ' + videos_list[i] + \
                 ' -- Precision: ' + "%.2f" % precisions[idx] + \
                 ' -- Precisions AUC: ' + "%.2f" % precisions_auc[idx] + \
                 ' -- IOU: ' + "%.2f" % ious[idx] + \
-                ' -- Speed: ' + "%.2f" % speed[idx] + ' --'
-                print
+                ' -- Speed: ' + "%.2f" % speed[idx] + ' --')
+                print()
 
         tot_frames = np.sum(lengths)
         mean_precision = np.sum(precisions * lengths) / tot_frames
         mean_precision_auc = np.sum(precisions_auc * lengths) / tot_frames
         mean_iou = np.sum(ious * lengths) / tot_frames
         mean_speed = np.sum(speed * lengths) / tot_frames
-        print '-- Overall stats (averaged per frame) on ' + str(nv) + ' videos (' + str(tot_frames) + ' frames) --'
-        print ' -- Precision ' + "(%d px)" % evaluation.dist_threshold + ': ' + "%.2f" % mean_precision +\
+        print('-- Overall stats (averaged per frame) on ' + str(nv) + ' videos (' + str(tot_frames) + ' frames) --')
+        print(' -- Precision ' + "(%d px)" % evaluation.dist_threshold + ': ' + "%.2f" % mean_precision +\
               ' -- Precisions AUC: ' + "%.2f" % mean_precision_auc +\
               ' -- IOU: ' + "%.2f" % mean_iou +\
-              ' -- Speed: ' + "%.2f" % mean_speed + ' --'
-        print
+              ' -- Speed: ' + "%.2f" % mean_speed + ' --')
+        print()
 
     else:
         gt, frame_name_list, _, _ = _init_video(env, evaluation, evaluation.video)
@@ -73,12 +73,12 @@ def main():
         bboxes, speed = tracker(hp, run, design, frame_name_list, pos_x, pos_y, target_w, target_h, final_score_sz,
                                 filename, image, templates_z, scores, evaluation.start_frame)
         _, precision, precision_auc, iou = _compile_results(gt, bboxes, evaluation.dist_threshold)
-        print evaluation.video + \
+        print(evaluation.video + \
               ' -- Precision ' + "(%d px)" % evaluation.dist_threshold + ': ' + "%.2f" % precision +\
               ' -- Precision AUC: ' + "%.2f" % precision_auc + \
               ' -- IOU: ' + "%.2f" % iou + \
-              ' -- Speed: ' + "%.2f" % speed + ' --'
-        print
+              ' -- Speed: ' + "%.2f" % speed + ' --')
+        print()
 
 
 def _compile_results(gt, bboxes, dist_threshold):
@@ -116,7 +116,7 @@ def _compile_results(gt, bboxes, dist_threshold):
 
 def _init_video(env, evaluation, video):
     video_folder = os.path.join(env.root_dataset, evaluation.dataset, video)
-    frame_name_list = [f for f in os.listdir(video_folder) if f.endswith(".jpg")]
+    frame_name_list = [f for f in os.listdir(video_folder) if f.endswith(".jpg") and not f.startswith('._')]
     frame_name_list = [os.path.join(env.root_dataset, evaluation.dataset, video, '') + s for s in frame_name_list]
     frame_name_list.sort()
     with Image.open(frame_name_list[0]) as img:
